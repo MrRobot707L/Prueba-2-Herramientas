@@ -86,3 +86,50 @@ El agente de copilot generó el código completo para el módulo ui/analisis_dat
 
 # Nota
 Este archivo será actualizado durante el desarrollo del proyecto con cada interacción relevante con IA.
+
+## prompt 5
+adaptame esta parte para un formato streamlit 
+def train_model(model,train_loader,criterion,optimizer,epochs=100):
+    train_losses=[]
+    for epoch in range(num_epochs):
+        model.train()
+        running_loss=0.0
+        for inputs,targets in train_loader:
+            optimizer.zero_grad()
+            outputs=model(inputs)
+            loss = criterion(outputs, targets)
+            loss.backward()
+            optimizer.step()
+            running_loss+=loss.item()*inputs.size(0)
+        epoch_loss=running_loss/len(train_loader.dataset)
+        train_losses.append(epoch_loss)
+        if (epoch+1)%10==0:
+            print(f'Epoch {epoch+1}/{num_epochs}, Loss: {epoch_loss:.4f}')
+    return train_losses
+
+**Respuesta:**
+# Definición de la función de entrenamiento
+def train_model(model, train_loader, criterion, optimizer, num_epochs=100):
+    train_losses = []
+    
+    # --- AGREGA ESTO AQUÍ (INICIALIZACIÓN) ---
+    progreso_texto = st.empty()     # Reserva un espacio en blanco en la pantalla
+    barra_progreso = st.progress(0) # Crea la barra vacía (al 0%)
+    # -----------------------------------------
+    
+    for epoch in range(num_epochs): # Aquí empieza tu bucle
+        model.train()
+        running_loss = 0.0
+        
+        # ... (aquí va todo tu código de forward, backward, optimizer, etc.) ...
+        
+        # ... cálculo del loss ...
+
+        # --- Y AQUÍ ACTUALIZAS LA BARRA (LO QUE PREGUNTASTE) ---
+        if (epoch+1) % 10 == 0:
+            # Actualiza el texto
+            progreso_texto.text(f'Entrenando... Época {epoch+1}/{num_epochs} - Error: {epoch_loss:.4f}')
+            # Mueve la barra azul (calcula el porcentaje matemático)
+            barra_progreso.progress((epoch + 1) / num_epochs)
+            
+    return train_losses

@@ -13,3 +13,7 @@ Cada integrante debe responsabilizarse por aproximadamente un 33% del desarrollo
 - Implementación de la pantalla principal en Streamlit.
 - Redacción inicial de la narrativa del proyecto.
 - Primer commit y documentación básica en GitHub.
+
+## Integrante 2: Cristian Vergara
+**Responsabilidades**
+- Creacion del modelo mlp adaptado a la interfas prediccion.py
