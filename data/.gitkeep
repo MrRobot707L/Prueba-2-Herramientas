@@ -1,0 +1,3 @@
+# Esta carpeta contiene los datasets del proyecto
+# - dataset.csv: Dataset original de Wine Quality
+# - procesado.pkl: Dataset procesado para el modelo

@@ -3,7 +3,7 @@ from ui import pantalla_principal, analisis_datos, prediccion
 
 st.set_page_config(
     page_title="Viña CIA",
-    page_icon="🍇",
+    page_icon="",
     layout="wide"
 )
 
