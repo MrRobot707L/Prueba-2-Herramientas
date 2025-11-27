@@ -133,3 +133,78 @@ def train_model(model, train_loader, criterion, optimizer, num_epochs=100):
             barra_progreso.progress((epoch + 1) / num_epochs)
             
     return train_losses
+
+## prompt 6
+necesito agregarle una manera que el usuario ingrese datos para que el modelo prediga si es premiun o no
+
+**Respuesta**
+feature_names = [
+        'Fixed Acidity', 'Volatile Acidity', 'Citric Acid', 'Residual Sugar', 
+        'Chlorides', 'Free Sulfur Dioxide', 'Total Sulfur Dioxide', 
+        'Density', 'pH', 'Sulphates', 'Alcohol'
+    ]
+with st.form("form_prediccion"):
+            col_inp1, col_inp2, col_inp3 = st.columns(3)
+            input_data = []
+            
+            # Crear inputs dinámicamente
+            for i, feature in enumerate(feature_names):
+                # Valor por defecto = la media (para que sea fácil probar)
+                default_val = float(st.session_state.stats_mean[i])
+                
+                if i % 3 == 0:
+                    with col_inp1:
+                        val = st.number_input(f"{feature}", value=default_val, format="%.4f")
+                elif i % 3 == 1:
+                    with col_inp2:
+                        val = st.number_input(f"{feature}", value=default_val, format="%.4f")
+                else:
+                    with col_inp3:
+                        val = st.number_input(f"{feature}", value=default_val, format="%.4f")
+                
+                input_data.append(val)
+
+            submit_val = st.form_submit_button("🔮 Predecir")
+
+        # --- LO QUE TE FALTABA: LA LÓGICA DE PREDICCIÓN ---
+        if submit_val:
+            # 1. Convertir a numpy
+            user_input = np.array(input_data, dtype=np.float32)
+            
+            # 2. NORMALIZAR (Usando las stats guardadas del entrenamiento)
+            user_input_norm = (user_input - st.session_state.stats_mean) / st.session_state.stats_std
+            
+            # 3. Tensor y Predicción
+            input_tensor = torch.tensor(user_input_norm).unsqueeze(0)
+            
+            model_eval = st.session_state.modelo_entrenado
+            model_eval.eval()
+            
+            with torch.no_grad():
+                prediction = model_eval(input_tensor)
+                probabilidad = prediction.item()
+            
+            # 4. Mostrar resultado
+            st.markdown("### Resultado:")
+            col_res1, col_res2 = st.columns([1, 3])
+            
+            with col_res1:
+                    st.markdown("""
+                                div style='background-color: #d4edda; padding: 20px; border-radius: 10px; text-align: center;'>
+                                <h1 style='color: #155724; margin:0;'>🏆 ¡ES PREMIUM! 🌟</h1>
+                                <p style='color: #155724; font-size: 20px; margin:0;'>Excelente calidad detectada</p>
+                                </div>
+                                """, unsafe_allow_html=True)
+                else:
+                    st.markdown("""
+                                <div style='background-color: #f8d7da; padding: 20px; border-radius: 10px; text-align: center;'>
+                                <h1 style='color: #721c24; margin:0;'>🍷 Vino No Premium</h1>
+                                <p style='color: #721c24; font-size: 20px; margin:0;'>Calidad estándar detectada</p>
+                                </div>
+                                """, unsafe_allow_html=True)
+            with col_res2:
+                if probabilidad >= 0.5:
+                    st.success(f"**¡ES PREMIUM!**  (Prob: {probabilidad*100:.2f}%)")
+                else:
+                    st.error(f"**Es Estándar.**  (Prob: {probabilidad*100:.2f}%)")
+
