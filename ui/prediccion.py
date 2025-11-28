@@ -82,23 +82,20 @@ def show():
     def train_model(model, train_loader, criterion, optimizer, num_epochs=100):
         train_losses = []
         
-        # 1. Diseño tipo "Dashboard"
         st.markdown("### 🚀 Entrenamiento en Tiempo Real")
         
-        # Columnas: Izquierda para métricas grandes, Derecha para el gráfico
         col_kpi, col_graph = st.columns([1, 3])
         
         with col_kpi:
             st.write("**Estado del Modelo:**")
-            metric_placeholder = st.empty() # Aquí irá el número grande
+            metric_placeholder = st.empty() 
             progreso_texto = st.empty()
             barra_progreso = st.progress(0)
             
         with col_graph:
             st.write("📉 **Reducción del Error (Loss):**")
-            chart_placeholder = st.empty() # Aquí irá el gráfico de línea
+            chart_placeholder = st.empty() 
             
-        # 2. Bucle de entrenamiento
         for epoch in range(num_epochs):
             model.train()
             running_loss = 0.0
@@ -113,15 +110,6 @@ def show():
             
             epoch_loss = running_loss / len(train_loader.dataset)
             train_losses.append(epoch_loss)
-            
-            # 3. ACTUALIZACIÓN VISUAL (Cada época)
-            # Esto crea el efecto de animación suave
-            
-            # A) Actualizamos el gráfico de línea
-            chart_placeholder.line_chart(train_losses)
-            
-            # B) Actualizamos el número grande (Métrica)
-            # Calculamos la diferencia con la época anterior para mostrar la flechita verde/roja
             if epoch > 0:
                 delta = train_losses[-2] - epoch_loss
                 metric_placeholder.metric(label="Error (Loss)", value=f"{epoch_loss:.4f}", delta=f"-{delta:.4f}")
