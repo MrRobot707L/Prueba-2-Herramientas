@@ -208,3 +208,63 @@ with st.form("form_prediccion"):
                 else:
                     st.error(f"**Es Estándar.**  (Prob: {probabilidad*100:.2f}%)")
 
+## prompt 7
+
+quiero saber si hay alguna manera de graficar el entrenamiento a tiempoo real
+
+**respuesta**
+# --- REEMPLAZA TU FUNCIÓN train_model POR ESTA VERSIÓN 2D RÁPIDA ---
+    def train_model(model, train_loader, criterion, optimizer, num_epochs=100):
+        train_losses = []
+        
+        # 1. Diseño tipo "Dashboard"
+        st.markdown("### 🚀 Entrenamiento en Tiempo Real")
+        
+        # Columnas: Izquierda para métricas grandes, Derecha para el gráfico
+        col_kpi, col_graph = st.columns([1, 3])
+        
+        with col_kpi:
+            st.write("**Estado del Modelo:**")
+            metric_placeholder = st.empty() # Aquí irá el número grande
+            progreso_texto = st.empty()
+            barra_progreso = st.progress(0)
+            
+        with col_graph:
+            st.write("📉 **Reducción del Error (Loss):**")
+            chart_placeholder = st.empty() # Aquí irá el gráfico de línea
+            
+        # 2. Bucle de entrenamiento
+        for epoch in range(num_epochs):
+            model.train()
+            running_loss = 0.0
+            
+            for inputs, targets in train_loader:
+                optimizer.zero_grad()
+                outputs = model(inputs)
+                loss = criterion(outputs, targets)
+                loss.backward()
+                optimizer.step()
+                running_loss += loss.item() * inputs.size(0)
+            
+            epoch_loss = running_loss / len(train_loader.dataset)
+            train_losses.append(epoch_loss)
+            
+            # 3. ACTUALIZACIÓN VISUAL (Cada época)
+            # Esto crea el efecto de animación suave
+            
+            # A) Actualizamos el gráfico de línea
+            chart_placeholder.line_chart(train_losses)
+            
+            # B) Actualizamos el número grande (Métrica)
+            # Calculamos la diferencia con la época anterior para mostrar la flechita verde/roja
+            if epoch > 0:
+                delta = train_losses[-2] - epoch_loss
+                metric_placeholder.metric(label="Error (Loss)", value=f"{epoch_loss:.4f}", delta=f"-{delta:.4f}")
+            else:
+                metric_placeholder.metric(label="Error (Loss)", value=f"{epoch_loss:.4f}")
+
+            # C) Barra de progreso
+            progreso_texto.text(f'Procesando época {epoch+1} de {num_epochs}...')
+            barra_progreso.progress((epoch + 1) / num_epochs)
+                
+        return train_losses
