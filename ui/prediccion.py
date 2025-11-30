@@ -79,23 +79,21 @@ def show():
     optimizer=optim.Adam(model.parameters(),lr=0.001)
     # Función de entrenamiento con barra de progreso
 # --- REEMPLAZA TU FUNCIÓN train_model POR ESTA VERSIÓN 2D RÁPIDA ---
+# --- REEMPLAZA TU FUNCIÓN train_model POR ESTA ---
     def train_model(model, train_loader, criterion, optimizer, num_epochs=100):
         train_losses = []
         
-        st.markdown("### 🚀 Entrenamiento en Tiempo Real")
-        
-        col_kpi, col_graph = st.columns([1, 3])
-        
-        with col_kpi:
-            st.write("**Estado del Modelo:**")
-            metric_placeholder = st.empty() 
+        # 1. Crear los espacios vacíos en la interfaz
+        col_progreso1, col_progreso2 = st.columns([1, 3])
+        with col_progreso1:
             progreso_texto = st.empty()
             barra_progreso = st.progress(0)
-            
-        with col_graph:
-            st.write("📉 **Reducción del Error (Loss):**")
-            chart_placeholder = st.empty() 
-            
+        
+        with col_progreso2:
+            st.write("📉 **Evolución del Error (Loss) en Tiempo Real:**")
+            grafico_placeholder = st.empty() # <--- AQUÍ OCURRE LA MAGIA
+        
+        # 2. Bucle de entrenamiento
         for epoch in range(num_epochs):
             model.train()
             running_loss = 0.0
@@ -110,14 +108,13 @@ def show():
             
             epoch_loss = running_loss / len(train_loader.dataset)
             train_losses.append(epoch_loss)
-            if epoch > 0:
-                delta = train_losses[-2] - epoch_loss
-                metric_placeholder.metric(label="Error (Loss)", value=f"{epoch_loss:.4f}", delta=f"-{delta:.4f}")
-            else:
-                metric_placeholder.metric(label="Error (Loss)", value=f"{epoch_loss:.4f}")
-
-            # C) Barra de progreso
-            progreso_texto.text(f'Procesando época {epoch+1} de {num_epochs}...')
+            
+            # 3. ACTUALIZACIÓN EN TIEMPO REAL
+            # En cada época, redibujamos el gráfico con los nuevos datos
+            grafico_placeholder.line_chart(train_losses)
+            
+            # Actualizamos la barra y el texto
+            progreso_texto.text(f'Época {epoch+1}/{num_epochs}\nLoss: {epoch_loss:.4f}')
             barra_progreso.progress((epoch + 1) / num_epochs)
                 
         return train_losses
