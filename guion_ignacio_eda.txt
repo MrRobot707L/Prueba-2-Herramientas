@@ -1,0 +1,162 @@
+================================================================================
+GUION ESPECIFICO - IGNACIO RAMIREZ
+Modulo: Analisis Exploratorio de Datos (EDA)
+================================================================================
+
+--------------------------------------------------------------------------------
+PARTE 1: ESTRUCTURA DEL PROYECTO (2-3 minutos)
+--------------------------------------------------------------------------------
+
+El proyecto sigue la estructura exigida en la evaluacion. Tenemos:
+
+En la raiz del repositorio:
+- app.py: El punto de entrada de la aplicacion Streamlit
+- requirements.txt: Las dependencias del proyecto
+- README.md: Documentacion general
+
+La carpeta ui/ contiene los tres modulos de interfaz:
+- pantalla_principal.py: Presenta la narrativa del proyecto
+- analisis_datos.py: El analisis exploratorio de datos (mi modulo)
+- prediccion.py: El modelo de machine learning
+
+La carpeta data/ almacena:
+- dataset.csv: El dataset original de Wine Quality
+- procesado.pkl: El dataset preprocesado para el modelo
+- generar_pkl.py: Script para regenerar el archivo pkl
+
+La carpeta docs/ contiene toda la documentacion:
+- narrativa.md: Historia del proyecto
+- responsabilidades.md: Tareas de cada integrante
+- prompts_ia.md: Declaracion de uso de IA
+- instrucciones.md: Como ejecutar la aplicacion
+
+--------------------------------------------------------------------------------
+PARTE 2: MI MODULO - ANALISIS EXPLORATORIO DE DATOS (3-4 minutos)
+--------------------------------------------------------------------------------
+
+[INTRODUCCION]
+
+El modulo de Analisis Exploratorio de Datos que yo desarrolle permite visualizar 
+y entender el dataset antes de aplicar machine learning. Esta ubicado en el 
+archivo ui/analisis_datos.py.
+
+[SECCION 1: EXPLORACION INICIAL]
+
+Primero mostramos las estadisticas descriptivas del dataset. Aqui el usuario 
+puede ver:
+- El numero total de registros: 1,599 vinos
+- Medias y desviaciones estandar de cada variable
+- Valores minimos y maximos
+- Los percentiles 25%, 50% y 75%
+
+Tambien mostramos las primeras filas del dataset en un expander para que el 
+usuario pueda ver los datos crudos.
+
+[SECCION 2: DISTRIBUCION DE LA CALIDAD]
+
+Luego visualizamos la distribucion de la variable objetivo usando un grafico de 
+barras con Seaborn.
+
+[MOSTRAR GRAFICO Y EXPLICAR]
+
+Aqui podemos ver que la mayoria de los vinos tienen calidad 5 o 6, mientras que 
+los vinos premium con calidad 7 u 8 son mucho menos frecuentes. Esto representa 
+un problema de clases desbalanceadas que hay que tener en cuenta al entrenar el 
+modelo.
+
+[SECCION 3: TRANSFORMACION DE DATOS - DTS]
+
+En la seccion de Transformacion de Datos mostramos como convertimos el problema 
+de multiclase a clasificacion binaria.
+
+Creamos la columna target donde:
+- 1 significa Premium (calidad >= 7)
+- 0 significa Estandar (calidad < 7)
+
+Mostramos un grafico de pastel que visualiza la proporcion resultante: 
+aproximadamente 13.5% de los vinos son Premium y 86.5% son Estandar.
+
+Esta binarizacion es necesaria para que el Perceptron Multicapa pueda aprender a 
+clasificar correctamente, ya que simplifica el problema y permite usar una 
+funcion de activacion Sigmoid en la salida.
+
+[SECCION 4: MATRIZ DE CORRELACION]
+
+Finalmente, el mapa de correlacion nos permite identificar que variables 
+quimicas influyen mas en la calidad.
+
+[MOSTRAR HEATMAP Y EXPLICAR]
+
+Las tres variables con mayor correlacion con la calidad son:
+1. Alcohol: correlacion positiva (~0.48) - mas alcohol, mejor calidad
+2. Acidez volatil: correlacion negativa (~-0.39) - menos acidez, mejor calidad
+3. Sulfatos: correlacion positiva (~0.25) - mas sulfatos, mejor calidad
+
+Este insight es util para el modulo de prediccion, ya que sugiere que variables 
+son mas importantes al momento de ingresar datos de un vino nuevo.
+
+--------------------------------------------------------------------------------
+PARTE 3: PROCESAMIENTO DE DATOS (1-2 minutos)
+--------------------------------------------------------------------------------
+
+Tambien me encargue de generar los archivos de datos en la carpeta data/.
+
+El archivo generar_pkl.py es un script que:
+1. Carga el dataset CSV original
+2. Crea la columna target para clasificacion binaria
+3. Guarda el resultado como archivo pickle (.pkl)
+
+[SI PREGUNTAN PORQUE PKL]
+
+Respecto a porque usamos formato pkl en vez de csv:
+
+El formato pickle es binario y permite cargar los datos mucho mas rapido, 
+aproximadamente 10 veces mas rapido que un CSV. Ademas preserva exactamente los 
+tipos de datos sin necesidad de parsear texto cada vez que se carga.
+
+Esto es importante porque el modulo de prediccion necesita cargar los datos cada 
+vez que el usuario entra a esa pantalla, y con pkl la carga es instantanea.
+
+--------------------------------------------------------------------------------
+PARTE 4: MIS RESPONSABILIDADES COMPLETAS
+--------------------------------------------------------------------------------
+
+Para resumir, mis responsabilidades en el proyecto fueron:
+
+1. Desarrollo completo del modulo ui/analisis_datos.py
+2. Implementacion de visualizaciones con Seaborn y Matplotlib
+3. Creacion de la matriz de correlacion
+4. Transformacion de datos (DTS) para preparar el target del modelo
+5. Generacion de los archivos de datos en la carpeta /data/
+6. Revision y validacion del funcionamiento de la aplicacion Streamlit
+
+--------------------------------------------------------------------------------
+DEMOSTRACION (cuando toque mostrar mi parte)
+--------------------------------------------------------------------------------
+
+[NAVEGAR A ANALISIS DE DATOS]
+
+Aqui pueden ver mi modulo. Primero cargo los datos desde la URL de UCI...
+
+[MOSTRAR ESTADISTICAS]
+
+Estas son las estadisticas descriptivas. Pueden ver que el alcohol varia entre 
+8.4 y 14.9 grados...
+
+[MOSTRAR GRAFICO DE DISTRIBUCION]
+
+Este grafico muestra el desbalance de clases. La mayoria son calidad 5 y 6...
+
+[MOSTRAR TRANSFORMACION]
+
+Aqui transformamos a binario. El grafico de pastel muestra que solo 13% son 
+premium...
+
+[MOSTRAR CORRELACION]
+
+Y finalmente la matriz de correlacion. Las variables mas importantes son 
+alcohol, acidez volatil y sulfatos.
+
+================================================================================
+TIEMPO ESTIMADO PARA MI PARTE: 5-7 minutos
+================================================================================
