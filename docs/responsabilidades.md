@@ -22,7 +22,7 @@ Cada integrante debe responsabilizarse por aproximadamente un 33% del desarrollo
 - Implementación del módulo `ui/prediccion.py` para entrenamiento del modelo.
 - Integración de la barra de progreso y visualización de la curva de aprendizaje.
 - Configuración de hiperparámetros del modelo (capas ocultas, learning rate, epochs).
-
+- Detalles esteticos en pantalla principal
 ---
 
 ## Integrante 3: Ignacio Ramírez
