@@ -12,7 +12,7 @@ import random
 
 def show():
     st.title("Entrenamiento del Sommelier AI")
-    st.write("Esta sección permite entrenar el modelo de predicción de vinos premium utilizando una red neuronal.")
+    st.caption("Entrena el modelo y prueba la predicción de vinos Premium vs Estándar.")
     pkl_path='data/procesado.pkl'
     if not os.path.exists(pkl_path):
         st.error("El archivo de datos procesados no se encuentra. Por favor, asegúrese de que 'data/procesado.pkl' existe.")
@@ -142,15 +142,18 @@ def show():
            st.session_state.precision = precision_score(y_true, y_pred, zero_division=0)
            st.session_state.recall = recall_score(y_true, y_pred, zero_division=0)
            st.session_state.f1 = f1_score(y_true, y_pred, zero_division=0)
-        st.success("¡Modelo entrenado exitosamente!")
+        st.success(
+            "✅ **Modelo entrenado y listo.**\n"
+            "👉 Ve a **'Predicción IA'** para probarlo con nuevos vinos."
+        )
     if st.session_state.modelo_entrenado is not None:
         st.subheader("Curva de Aprendizaje")
         st.line_chart(st.session_state.train_losses)
         st.caption("Una curva descendente indica que el modelo está aprendiendo.")
         
-        # Metricas de Rendimiento del Modelo
+        # Métricas de Rendimiento del Modelo
         st.markdown("---")
-        st.header("Metricas de Rendimiento del Modelo")
+        st.header("Métricas de Rendimiento del Modelo")
         col_m1, col_m2, col_m3, col_m4 = st.columns(4)
         with col_m1:
             st.metric("Accuracy", f"{st.session_state.accuracy:.2%}")
@@ -160,7 +163,7 @@ def show():
             st.metric("Recall", f"{st.session_state.recall:.2%}")
         with col_m4:
             st.metric("F1-Score", f"{st.session_state.f1:.2%}")
-        st.caption("Accuracy: % de predicciones correctas | Precision: % de Premium predichos que son reales | Recall: % de Premium reales detectados | F1: Media armonica")
+        st.caption("Accuracy: % de predicciones correctas | Precisión: % de Premium predichos que son reales | Recall: % de Premium reales detectados | F1: Media armónica")
         
         st.markdown("---")
         st.header("Probador de Vinos (Inferencia)")
@@ -203,6 +206,21 @@ def show():
         with col_btn2:
             st.caption("Carga valores reales de un vino aleatorio del dataset")
         
+        # Mapear cada feature a una descripción breve para usar en help=
+        help_texts = {
+            'Fixed Acidity': 'Acidez fija (g/dm³): ácidos no volátiles presentes en el vino.',
+            'Volatile Acidity': 'Acidez volátil (g/dm³): niveles altos se asocian a aromas desagradables.',
+            'Citric Acid': 'Ácido cítrico (g/dm³): aporta frescor y acidez agradable.',
+            'Residual Sugar': 'Azúcar residual (g/dm³): cantidad de azúcar no fermentada.',
+            'Chlorides': 'Cloruros (g/dm³): concentración de sal; valores altos son indeseables.',
+            'Free Sulfur Dioxide': 'SO₂ libre (mg/dm³): forma activa del sulfuroso, protege frente a oxidación.',
+            'Total Sulfur Dioxide': 'SO₂ total (mg/dm³): suma de formas libre y combinada de sulfuroso.',
+            'Density': 'Densidad (g/cm³): se relaciona con el contenido de azúcar y alcohol.',
+            'pH': 'pH: nivel de acidez global del vino (bajo = más ácido).',
+            'Sulphates': 'Sulfatos (g/dm³): contribuyen a la estabilidad y conservación.',
+            'Alcohol': 'Grado alcohólico (% vol): porcentaje de alcohol del vino.'
+        }
+
         # Form con key dinamica
         with st.form(f"form_prediccion_{st.session_state.form_key_counter}"):
             col_inp1, col_inp2, col_inp3 = st.columns(3)
@@ -211,13 +229,28 @@ def show():
                 input_key = f"inp_{feature}_{st.session_state.form_key_counter}"
                 if i % 3 == 0:
                     with col_inp1:
-                        val = st.number_input(f"{feature}", format="%.4f", key=input_key)
+                        val = st.number_input(
+                            f"{feature}",
+                            format="%.4f",
+                            key=input_key,
+                            help=help_texts.get(feature, "")
+                        )
                 elif i % 3 == 1:
                     with col_inp2:
-                        val = st.number_input(f"{feature}", format="%.4f", key=input_key)
+                        val = st.number_input(
+                            f"{feature}",
+                            format="%.4f",
+                            key=input_key,
+                            help=help_texts.get(feature, "")
+                        )
                 else:
                     with col_inp3:
-                        val = st.number_input(f"{feature}", format="%.4f", key=input_key)
+                        val = st.number_input(
+                            f"{feature}",
+                            format="%.4f",
+                            key=input_key,
+                            help=help_texts.get(feature, "")
+                        )
                 input_data.append(val)
             submit_val = st.form_submit_button("🔮 Predecir Calidad")
         if submit_val:
@@ -230,8 +263,8 @@ def show():
                 prediction = model_eval(input_tensor)
                 probabilidad = prediction.item()
             
-            # Determinar clasificacion
-            clasificacion = "Premium" if probabilidad >= 0.5 else "Estandar"
+            # Determinar clasificación
+            clasificacion = "Premium" if probabilidad >= 0.5 else "Estándar"
             
             # Guardar en historial de predicciones
             if 'historial_predicciones' not in st.session_state:
@@ -267,8 +300,11 @@ def show():
                     st.success(f"**¡ES PREMIUM!**  (Prob: {probabilidad*100:.2f}%)")
                 else:
                     st.error(f"**Es Estándar.**  (Prob: {probabilidad*100:.2f}%)")
+                # Explicación textual simple basada en variables clave
+                st.markdown("**Factores que influyeron más según los valores ingresados:**")
+                st.markdown(
+                    "- Alcohol alto y sulfatos elevados suelen empujar la predicción hacia *Premium*.\n"
+                    "- Acidez volátil alta o alcohol bajo suelen asociarse a vinos *Estándar*."
+                )
             
             st.info(f"📊 Predicción guardada en historial. Total: {len(st.session_state.historial_predicciones)} predicciones")
-if __name__ == "__main__":
-    show()
-                

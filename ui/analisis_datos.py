@@ -12,6 +12,7 @@ def load_data():
 
 def show():
     st.title("Análisis Exploratorio de Datos (EDA)")
+    st.caption("Explora el dataset de vinos y descubre patrones clave en sus variables químicas.")
     st.markdown("---")
 
     # Carga de datos
@@ -129,9 +130,9 @@ def show():
     st.success(
         f"""
         **Insight para el Sommelier Artificial:**
-        
+
         Las variables **{top_names[0]}**, **{top_names[1]}** y **{top_names[2]}** son las que tienen mayor impacto en la calidad.
-        
+
         *Sugerencia:* Al usar el módulo de predicción, preste especial atención a estos parámetros químicos.
         """
     )

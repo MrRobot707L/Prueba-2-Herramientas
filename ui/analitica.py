@@ -15,7 +15,8 @@ def guardar_historial_sesiones(historial):
         json.dump(historial, f, ensure_ascii=False, indent=2)
 
 def show():
-    st.title("Panel de Analitica Web")
+    st.title("Panel de Analítica Web")
+    st.caption("Consulta métricas de uso de la app y el historial de predicciones.")
     st.markdown("---")
     
     # Inicializar historial de predicciones si no existe
@@ -26,11 +27,12 @@ def show():
     if 'historial_sesiones' not in st.session_state:
         st.session_state.historial_sesiones = []
     
-    # --- Seccion 1: Metricas Generales de Sesion ---
-    st.header("1. Metricas de Sesion")
+    # --- Sección 1: Métricas Generales de Sesión ---
+    st.header("1. Métricas de Sesión")
     
     # Calcular valores estaticos para las otras metricas
     premium_count = sum(1 for p in st.session_state.historial_predicciones if p.get('clasificacion') == 'Premium')
+    total_predicciones = len(st.session_state.historial_predicciones)
     
     # Layout con reloj en tiempo real usando st.fragment (Streamlit 1.33+)
     @st.fragment(run_every=1)
@@ -39,7 +41,7 @@ def show():
         horas = int(tiempo_sesion.total_seconds() // 3600)
         minutos = int((tiempo_sesion.total_seconds() % 3600) // 60)
         segundos = int(tiempo_sesion.total_seconds() % 60)
-        st.metric("⏱️ Tiempo de Sesion", f"{horas:02d}:{minutos:02d}:{segundos:02d}")
+        st.metric("⏱️ Tiempo de Sesión", f"{horas:02d}:{minutos:02d}:{segundos:02d}")
     
     col1, col2, col3, col4 = st.columns(4)
     
@@ -48,14 +50,21 @@ def show():
     with col2:
         st.metric("🔄 Total Navegaciones", st.session_state.total_views)
     with col3:
-        st.metric("🍷 Vinos Analizados", len(st.session_state.historial_predicciones))
+        st.metric("🍷 Vinos Analizados", total_predicciones)
     with col4:
         st.metric("🏆 Vinos Premium", premium_count)
+
+    # Historia de usuario resumida
+    if total_predicciones > 0:
+        st.info(
+            f"En esta sesión has clasificado **{total_predicciones}** vinos, "
+            f"de los cuales **{premium_count}** fueron Premium."
+        )
     
     st.markdown("---")
     
-    # --- Seccion 2: Navegacion por Secciones ---
-    st.header("2. Uso por Seccion")
+    # --- Sección 2: Navegación por Secciones ---
+    st.header("2. Uso por Sección")
     
     col_nav1, col_nav2 = st.columns([1, 2])
     
@@ -68,14 +77,14 @@ def show():
         # Grafico de barras de navegacion
         if st.session_state.total_views > 0:
             chart_data = pd.DataFrame({
-                'Seccion': list(st.session_state.page_views.keys()),
+                'Sección': list(st.session_state.page_views.keys()),
                 'Visitas': list(st.session_state.page_views.values())
             })
-            st.bar_chart(chart_data.set_index('Seccion'))
+            st.bar_chart(chart_data.set_index('Sección'))
     
     st.markdown("---")
     
-    # --- Seccion 3: Historial de Predicciones ---
+    # --- Sección 3: Historial de Predicciones ---
     st.header("3. Historial de Vinos Clasificados")
     
     if len(st.session_state.historial_predicciones) == 0:
@@ -92,7 +101,7 @@ def show():
         with col_res2:
             st.metric("Premium", premium, delta=f"{(premium/total)*100:.1f}%")
         with col_res3:
-            st.metric("Estandar", estandar, delta=f"{(estandar/total)*100:.1f}%")
+            st.metric("Estándar", estandar, delta=f"{(estandar/total)*100:.1f}%")
         
         # Tabla con historial completo
         st.markdown("### Detalle de Predicciones")
@@ -114,21 +123,21 @@ def show():
             mime="text/csv"
         )
         
-        # Grafico de distribucion de clasificaciones (interactivo con Plotly)
-        st.markdown("### Distribucion de Clasificaciones")
+        # Gráfico de distribución de clasificaciones (interactivo con Plotly)
+        st.markdown("### Distribución de Clasificaciones")
         import plotly.express as px
         
         df_pie = pd.DataFrame({
-            'Clasificacion': ['Premium', 'Estandar'],
+            'Clasificación': ['Premium', 'Estándar'],
             'Cantidad': [premium, estandar]
         })
         
         fig = px.pie(
             df_pie, 
             values='Cantidad', 
-            names='Clasificacion',
-            color='Clasificacion',
-            color_discrete_map={'Premium': '#D4AF37', 'Estandar': '#800020'},
+            names='Clasificación',
+            color='Clasificación',
+            color_discrete_map={'Premium': '#D4AF37', 'Estándar': '#800020'},
             hole=0.4  # Donut chart
         )
         fig.update_layout(
@@ -147,7 +156,7 @@ def show():
     
     st.markdown("---")
     
-    # --- Seccion 4: Historial de Sesiones ---
+    # --- Sección 4: Historial de Sesiones ---
     st.header("4. Historial de Sesiones")
     
     # Calcular duracion actual para el historial
@@ -156,7 +165,7 @@ def show():
     m = int((tiempo_actual.total_seconds() % 3600) // 60)
     s = int(tiempo_actual.total_seconds() % 60)
     
-    # Sesion actual
+    # Sesión actual
     sesion_actual = {
         'inicio': st.session_state.session_start.strftime("%Y-%m-%d %H:%M:%S"),
         'duracion': f"{h:02d}:{m:02d}:{s:02d}",
@@ -165,13 +174,13 @@ def show():
         'premium_encontrados': premium_count
     }
     
-    # Mostrar sesion actual
-    st.markdown("### Sesion Actual")
+    # Mostrar sesión actual
+    st.markdown("### Sesión Actual")
     col_ses1, col_ses2, col_ses3 = st.columns(3)
     with col_ses1:
         st.info(f"**Inicio:** {sesion_actual['inicio']}")
     with col_ses2:
-        st.info(f"**Duracion:** {sesion_actual['duracion']}")
+        st.info(f"**Duración:** {sesion_actual['duracion']}")
     with col_ses3:
         st.info(f"**Actividad:** {sesion_actual['navegaciones']} navs, {sesion_actual['predicciones']} preds")
     
@@ -183,26 +192,26 @@ def show():
         df_sesiones = pd.DataFrame(st.session_state.historial_sesiones)
         st.dataframe(df_sesiones, use_container_width=True)
         
-        # Estadisticas acumuladas
-        st.markdown("### Estadisticas Acumuladas")
+        # Estadísticas acumuladas
+        st.markdown("### Estadísticas Acumuladas")
         total_navs = sum(s.get('navegaciones', 0) for s in st.session_state.historial_sesiones)
         total_preds = sum(s.get('predicciones', 0) for s in st.session_state.historial_sesiones)
         total_premium = sum(s.get('premium_encontrados', 0) for s in st.session_state.historial_sesiones)
         
         col_ac1, col_ac2, col_ac3 = st.columns(3)
         with col_ac1:
-            st.metric("Total Navegaciones (historico)", total_navs)
+            st.metric("Total Navegaciones (histórico)", total_navs)
         with col_ac2:
-            st.metric("Total Predicciones (historico)", total_preds)
+            st.metric("Total Predicciones (histórico)", total_preds)
         with col_ac3:
-            st.metric("Total Premium (historico)", total_premium)
+            st.metric("Total Premium (histórico)", total_premium)
     else:
         st.info("No hay sesiones anteriores guardadas.")
     
     st.markdown("---")
     
-    # --- Seccion 5: Informacion del Sistema ---
-    st.header("5. Informacion del Sistema")
+    # --- Sección 5: Información del Sistema ---
+    st.header("5. Información del Sistema")
     
     col_sys1, col_sys2 = st.columns(2)
     
@@ -222,6 +231,6 @@ def show():
         st.markdown("**Fuente de Datos:**")
         st.write("- Dataset: Wine Quality Red (UCI)")
         st.write("- Registros: 1,599 vinos")
-        st.write("- Features: 11 variables quimicas")
+        st.write("- Features: 11 variables químicas")
         st.write("- Origen: UCI Machine Learning Repository")
         st.caption("Datos cargados desde fuente externa (cloud)")

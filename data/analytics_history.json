@@ -40,5 +40,68 @@
     "navegaciones": 5,
     "predicciones": 0,
     "premium_encontrados": 0
+  },
+  {
+    "inicio": "2025-12-03 19:10:57",
+    "duracion": "00:00:00",
+    "navegaciones": 1,
+    "predicciones": 0,
+    "premium_encontrados": 0
+  },
+  {
+    "inicio": "2025-12-03 19:14:36",
+    "duracion": "00:00:00",
+    "navegaciones": 1,
+    "predicciones": 0,
+    "premium_encontrados": 0
+  },
+  {
+    "inicio": "2025-12-03 19:25:15",
+    "duracion": "00:00:00",
+    "navegaciones": 1,
+    "predicciones": 0,
+    "premium_encontrados": 0
+  },
+  {
+    "inicio": "2025-12-03 19:28:29",
+    "duracion": "00:00:00",
+    "navegaciones": 1,
+    "predicciones": 0,
+    "premium_encontrados": 0
+  },
+  {
+    "inicio": "2025-12-03 19:31:17",
+    "duracion": "00:00:38",
+    "navegaciones": 5,
+    "predicciones": 0,
+    "premium_encontrados": 0
+  },
+  {
+    "inicio": "2025-12-03 19:51:33",
+    "duracion": "00:01:37",
+    "navegaciones": 7,
+    "predicciones": 1,
+    "premium_encontrados": 0
+  },
+  {
+    "inicio": "2025-12-03 19:59:55",
+    "duracion": "00:09:43",
+    "navegaciones": 4,
+    "predicciones": 0,
+    "premium_encontrados": 0
+  },
+  {
+    "inicio": "2025-12-03 20:13:38",
+    "duracion": "00:02:10",
+    "navegaciones": 12,
+    "predicciones": 3,
+    "premium_encontrados": 0
+  },
+  {
+    "inicio": "2025-12-03 20:19:37",
+    "duracion": "00:00:00",
+    "navegaciones": 1,
+    "predicciones": 0,
+    "premium_encontrados": 0
   }
 ]
