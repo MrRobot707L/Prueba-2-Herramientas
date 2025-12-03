@@ -1,8 +1,8 @@
 # Viña CIA - Sommelier Artificial
 
-**Version Preliminar (50%)**
+**Version Avanzada (75%)**
 
-Aplicacion web interactiva desarrollada en Streamlit para el analisis y prediccion de calidad de vinos utilizando redes neuronales.
+Aplicacion web interactiva desarrollada en Streamlit para el analisis y prediccion de calidad de vinos utilizando redes neuronales, con modulo completo de analitica web.
 
 ## Descripcion del Proyecto
 
@@ -13,6 +13,15 @@ Este proyecto utiliza el dataset Wine Quality del repositorio UCI Machine Learni
 - **Pantalla Principal**: Presentacion del proyecto y narrativa del caso de negocio.
 - **Analisis de Datos (EDA)**: Exploracion del dataset, visualizaciones y matriz de correlacion.
 - **Prediccion IA**: Modelo MLP (Perceptron Multicapa) con PyTorch para clasificar vinos.
+  - Metricas de rendimiento (Accuracy, Precision, Recall, F1-Score)
+  - Boton "Aleatorizar Muestra" para cargar datos reales del dataset
+  - Historial de predicciones guardado automaticamente
+- **Analitica Web**: Panel completo de metricas de uso.
+  - Reloj de sesion en tiempo real
+  - Tracking de navegacion por secciones
+  - Historial de vinos clasificados con grafico interactivo (Plotly)
+  - Persistencia de sesiones en archivo JSON
+  - Exportacion de historial a CSV
 
 ## Requisitos
 
@@ -63,10 +72,12 @@ Prueba-2-Herramientas/
 |   |-- pantalla_principal.py
 |   |-- analisis_datos.py
 |   |-- prediccion.py
+|   |-- analitica.py       # Modulo de analitica web
 |-- data/
 |   |-- dataset.csv        # Dataset Wine Quality (UCI)
 |   |-- procesado.pkl      # Dataset preprocesado
 |   |-- generar_pkl.py     # Script de preprocesamiento
+|   |-- analytics_history.json  # Historial de sesiones persistido
 |-- docs/
     |-- narrativa.md
     |-- responsabilidades.md
@@ -78,14 +89,20 @@ Prueba-2-Herramientas/
 
 - **Antonia Montecinos**: Estructura del proyecto y pantalla principal
 - **Cristian Vergara**: Modelo MLP y modulo de prediccion
-- **Ignacio Ramirez**: Analisis exploratorio de datos y visualizaciones
+- **Ignacio Ramirez**: Analisis exploratorio de datos, visualizaciones y modulo de analitica web
 
 ## Tecnologias Utilizadas
 
 - Streamlit (frontend)
 - Pandas (manipulacion de datos)
 - PyTorch (red neuronal MLP)
-- Matplotlib / Seaborn (visualizaciones)
+- Scikit-learn (metricas de rendimiento)
+- Matplotlib / Seaborn (visualizaciones EDA)
+- Plotly (graficos interactivos)
+
+## Fuente de Datos
+
+Dataset Wine Quality Red del UCI Machine Learning Repository (carga desde fuente externa/cloud).
 
 ## Asignatura
 
