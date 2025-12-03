@@ -6,6 +6,9 @@ import numpy as np
 import pandas as pd
 import os
 import streamlit as st
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+from datetime import datetime
+import random
 
 def show():
     st.title("Entrenamiento del Sommelier AI")
@@ -129,29 +132,94 @@ def show():
            st.session_state.stats_mean = mean
            st.session_state.stats_std = std
            st.session_state.train_losses = losses
+           # Calcular metricas de rendimiento
+           model.eval()
+           with torch.no_grad():
+               y_pred_proba = model(X_tensor)
+               y_pred = (y_pred_proba >= 0.5).float().numpy()
+               y_true = y_tensor.numpy()
+           st.session_state.accuracy = accuracy_score(y_true, y_pred)
+           st.session_state.precision = precision_score(y_true, y_pred, zero_division=0)
+           st.session_state.recall = recall_score(y_true, y_pred, zero_division=0)
+           st.session_state.f1 = f1_score(y_true, y_pred, zero_division=0)
         st.success("¡Modelo entrenado exitosamente!")
     if st.session_state.modelo_entrenado is not None:
         st.subheader("Curva de Aprendizaje")
         st.line_chart(st.session_state.train_losses)
         st.caption("Una curva descendente indica que el modelo está aprendiendo.")
+        
+        # Metricas de Rendimiento del Modelo
+        st.markdown("---")
+        st.header("Metricas de Rendimiento del Modelo")
+        col_m1, col_m2, col_m3, col_m4 = st.columns(4)
+        with col_m1:
+            st.metric("Accuracy", f"{st.session_state.accuracy:.2%}")
+        with col_m2:
+            st.metric("Precision", f"{st.session_state.precision:.2%}")
+        with col_m3:
+            st.metric("Recall", f"{st.session_state.recall:.2%}")
+        with col_m4:
+            st.metric("F1-Score", f"{st.session_state.f1:.2%}")
+        st.caption("Accuracy: % de predicciones correctas | Precision: % de Premium predichos que son reales | Recall: % de Premium reales detectados | F1: Media armonica")
+        
         st.markdown("---")
         st.header("Probador de Vinos (Inferencia)")
-        with st.form("form_prediccion"):
+        
+        # Nombres de columnas en el CSV original (minusculas)
+        csv_column_names = [
+            'fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar', 
+            'chlorides', 'free sulfur dioxide', 'total sulfur dioxide', 
+            'density', 'pH', 'sulphates', 'alcohol'
+        ]
+        
+        # Inicializar contador de form para forzar re-render
+        if 'form_key_counter' not in st.session_state:
+            st.session_state.form_key_counter = 0
+        
+        # Inicializar valores para cada input usando las keys del form
+        for i, feature in enumerate(feature_names):
+            input_key = f"inp_{feature}_{st.session_state.form_key_counter}"
+            if input_key not in st.session_state:
+                st.session_state[input_key] = float(st.session_state.stats_mean[i])
+        
+        # Funcion callback para aleatorizar - actualiza las keys del form
+        def aleatorizar_muestra():
+            data_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'dataset.csv')
+            if os.path.exists(data_path):
+                df_random = pd.read_csv(data_path, delimiter=';')
+                random_idx = random.randint(0, len(df_random) - 1)
+                random_row = df_random.iloc[random_idx]
+                # Incrementar contador para crear nuevo form
+                st.session_state.form_key_counter += 1
+                # Setear nuevos valores con la nueva key
+                for i, (feature, col) in enumerate(zip(feature_names, csv_column_names)):
+                    new_key = f"inp_{feature}_{st.session_state.form_key_counter}"
+                    st.session_state[new_key] = float(random_row[col])
+        
+        # Boton para aleatorizar muestra (fuera del form)
+        col_btn1, col_btn2 = st.columns([1, 3])
+        with col_btn1:
+            st.button("🎲 Aleatorizar Muestra", on_click=aleatorizar_muestra)
+        with col_btn2:
+            st.caption("Carga valores reales de un vino aleatorio del dataset")
+        
+        # Form con key dinamica
+        with st.form(f"form_prediccion_{st.session_state.form_key_counter}"):
             col_inp1, col_inp2, col_inp3 = st.columns(3)
             input_data = []
             for i, feature in enumerate(feature_names):
-                default_val = float(st.session_state.stats_mean[i])
+                input_key = f"inp_{feature}_{st.session_state.form_key_counter}"
                 if i % 3 == 0:
                     with col_inp1:
-                        val = st.number_input(f"{feature}", value=default_val, format="%.4f")
+                        val = st.number_input(f"{feature}", format="%.4f", key=input_key)
                 elif i % 3 == 1:
                     with col_inp2:
-                        val = st.number_input(f"{feature}", value=default_val, format="%.4f")
+                        val = st.number_input(f"{feature}", format="%.4f", key=input_key)
                 else:
                     with col_inp3:
-                        val = st.number_input(f"{feature}", value=default_val, format="%.4f")
+                        val = st.number_input(f"{feature}", format="%.4f", key=input_key)
                 input_data.append(val)
-            submit_val = st.form_submit_button("Predecir")
+            submit_val = st.form_submit_button("🔮 Predecir Calidad")
         if submit_val:
             user_input = np.array(input_data, dtype=np.float32)
             user_input_norm = (user_input - st.session_state.stats_mean) / st.session_state.stats_std
@@ -161,12 +229,28 @@ def show():
             with torch.no_grad():
                 prediction = model_eval(input_tensor)
                 probabilidad = prediction.item()
+            
+            # Determinar clasificacion
+            clasificacion = "Premium" if probabilidad >= 0.5 else "Estandar"
+            
+            # Guardar en historial de predicciones
+            if 'historial_predicciones' not in st.session_state:
+                st.session_state.historial_predicciones = []
+            
+            prediccion_registro = {
+                'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                'clasificacion': clasificacion,
+                'probabilidad': f"{probabilidad*100:.2f}%",
+                'valores': {feature_names[i]: input_data[i] for i in range(len(feature_names))}
+            }
+            st.session_state.historial_predicciones.append(prediccion_registro)
+            
             st.markdown("### Resultado:")
             col_res1, col_res2 = st.columns([1, 3])
             with col_res1:
                 if probabilidad >= 0.5:
                     st.markdown("""
-                                div style='background-color: #d4edda; padding: 20px; border-radius: 10px; text-align: center;'>
+                                <div style='background-color: #d4edda; padding: 20px; border-radius: 10px; text-align: center;'>
                                 <h1 style='color: #155724; margin:0;'>🏆 ¡ES PREMIUM! 🌟</h1>
                                 <p style='color: #155724; font-size: 20px; margin:0;'>Excelente calidad detectada</p>
                                 </div>
@@ -183,6 +267,8 @@ def show():
                     st.success(f"**¡ES PREMIUM!**  (Prob: {probabilidad*100:.2f}%)")
                 else:
                     st.error(f"**Es Estándar.**  (Prob: {probabilidad*100:.2f}%)")
+            
+            st.info(f"📊 Predicción guardada en historial. Total: {len(st.session_state.historial_predicciones)} predicciones")
 if __name__ == "__main__":
     show()
                 
