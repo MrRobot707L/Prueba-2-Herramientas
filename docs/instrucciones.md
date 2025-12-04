@@ -111,3 +111,12 @@ La aplicación contiene cuatro pantallas principales, accesibles desde el menú 
 - **Scikit-learn**: métricas de evaluación del modelo.
 - **Matplotlib / Seaborn**: visualizaciones en el EDA.
 - **Plotly**: gráficos interactivos en el módulo de analítica.
+
+---
+
+## 8. Nota sobre normalización y reinicios de la app
+
+- La normalización de las variables de entrada (media y desviación típica) se calcula durante el entrenamiento y se guarda en `st.session_state`.
+- Esto garantiza que, mientras la sesión de Streamlit siga activa, las nuevas predicciones usan exactamente la misma normalización que el modelo entrenado.
+- Si se **reinicia la app** (por ejemplo, deteniendo y volviendo a ejecutar `streamlit run app.py` o recargando con cambios de código), se vuelven a calcular la media y desviación típica y se **reentrena el modelo** en esa nueva sesión.
+- Es importante que el docente tenga en cuenta que cada reinicio implica un nuevo entrenamiento, por lo que las métricas y parámetros pueden variar ligeramente entre sesiones.
