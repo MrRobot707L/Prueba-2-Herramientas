@@ -47,12 +47,16 @@ def show():
     
     with col1:
         reloj_tiempo_real()
+        st.caption("Tiempo transcurrido desde que inició la sesión actual.")
     with col2:
         st.metric("🔄 Total Navegaciones", st.session_state.total_views)
+        st.caption("Número de cambios de sección realizados en esta sesión.")
     with col3:
         st.metric("🍷 Vinos Analizados", total_predicciones)
+        st.caption("Cantidad de vinos clasificados mediante el módulo de Predicción IA en esta sesión.")
     with col4:
         st.metric("🏆 Vinos Premium", premium_count)
+        st.caption("Cuántos de los vinos analizados fueron clasificados como Premium.")
 
     # Historia de usuario resumida
     if total_predicciones > 0:
@@ -201,10 +205,13 @@ def show():
         col_ac1, col_ac2, col_ac3 = st.columns(3)
         with col_ac1:
             st.metric("Total Navegaciones (histórico)", total_navs)
+            st.caption("Suma de todas las navegaciones realizadas en sesiones anteriores.")
         with col_ac2:
             st.metric("Total Predicciones (histórico)", total_preds)
+            st.caption("Cantidad total de vinos clasificados en todas las sesiones guardadas.")
         with col_ac3:
             st.metric("Total Premium (histórico)", total_premium)
+            st.caption("Total de vinos clasificados como Premium a lo largo del tiempo.")
     else:
         st.info("No hay sesiones anteriores guardadas.")
     

@@ -306,5 +306,11 @@ def show():
                     "- Alcohol alto y sulfatos elevados suelen empujar la predicción hacia *Premium*.\n"
                     "- Acidez volátil alta o alcohol bajo suelen asociarse a vinos *Estándar*."
                 )
+                st.info(
+                    "Ahora puedes ir a **Analítica Web** para ver "
+                    "cómo esta predicción impacta tus métricas de sesión."
+                )
             
-            st.info(f"📊 Predicción guardada en historial. Total: {len(st.session_state.historial_predicciones)} predicciones")
+            st.info(
+                f"📊 Predicción guardada en historial. Total: {len(st.session_state.historial_predicciones)} predicciones"
+            )
