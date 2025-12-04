@@ -40,5 +40,26 @@
     "navegaciones": 5,
     "predicciones": 0,
     "premium_encontrados": 0
+  },
+  {
+    "inicio": "2025-12-03 16:52:08",
+    "duracion": "00:00:00",
+    "navegaciones": 1,
+    "predicciones": 0,
+    "premium_encontrados": 0
+  },
+  {
+    "inicio": "2025-12-03 19:45:55",
+    "duracion": "00:00:12",
+    "navegaciones": 3,
+    "predicciones": 0,
+    "premium_encontrados": 0
+  },
+  {
+    "inicio": "2025-12-03 19:46:27",
+    "duracion": "00:04:08",
+    "navegaciones": 4,
+    "predicciones": 0,
+    "premium_encontrados": 0
   }
 ]
