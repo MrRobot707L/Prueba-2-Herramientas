@@ -3,12 +3,13 @@ from PIL import Image
 import os
 
 def show():
+    st.caption("Contexto de la solución de IA.")
     # --- 1. ENCABEZADO CON ESTILO ---
     st.markdown("""
         <div style='text-align: center;'>
-            <h1>🍇 Viña CIA: Certificación Inteligente</h1>
-            <p style='font-size: 1.2em; color: gray;'>
-                Revolucionando la tenología con Inteligencia Artificial
+            <h1 style='color: #800020;'>🍇 Viña CIA: Certificación Inteligente</h1>
+            <p style='font-size: 1.2em; color: #666666;'>
+                Revolucionando la tecnología con Inteligencia Artificial
             </p>
         </div>
     """, unsafe_allow_html=True)

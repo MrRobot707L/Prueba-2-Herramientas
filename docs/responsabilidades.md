@@ -13,6 +13,7 @@ Cada integrante debe responsabilizarse por aproximadamente un 33% del desarrollo
 - Implementación de la pantalla principal en Streamlit (`ui/pantalla_principal.py`).
 - Redacción inicial de la narrativa del proyecto.
 - Primer commit y documentación básica en GitHub.
+- Mejoras UI: Añadir descripciones breves por página y corrección de textos/ortografía para lograr una experiencia más clara y coherente. Detalles de la paleta visual, añadir tooltips y mensajes más claros en formularios, y se mejoró la analítica con pequeñas historias de usuario. Limpieza en la estructura del código.
 
 ---
 

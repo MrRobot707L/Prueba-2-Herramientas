@@ -1,34 +1,48 @@
-# Viña CIA - Sommelier Artificial
+# Viña CIA - Sommelier Artificial (Streamlit + PyTorch)
 
-**Version Avanzada (75%)**
+**Versión Avanzada (75%)**
 
-Aplicacion web interactiva desarrollada en Streamlit para el analisis y prediccion de calidad de vinos utilizando redes neuronales, con modulo completo de analitica web.
+Aplicación web en Streamlit para analizar y predecir la calidad de vinos tintos usando un modelo de red neuronal (MLP) y un módulo de analítica de uso en tiempo real.
 
-## Descripcion del Proyecto
 
-Este proyecto utiliza el dataset Wine Quality del repositorio UCI Machine Learning para construir un "Sommelier Artificial" que clasifica vinos como Premium o Estandar basandose en sus caracteristicas fisico-quimicas.
+## Descripción del Proyecto
+
+Este proyecto utiliza el dataset Wine Quality del repositorio UCI Machine Learning para construir un "Sommelier Artificial" que clasifica vinos como Premium o Estándar basándose en sus características físico-químicas.
+
+Breve flujo de uso:
+“1. Ve a Análisis de Datos para conocer el dataset.”
+“2. Entrena el modelo en Predicción IA.”
+“3. Clasifica vinos y revisa estadísticas en Analítica Web.”
+
+## Características clave
+Bullets muy breves:
+“Clasificación Premium vs Estándar con red neuronal MLP en PyTorch.”
+“Curva de aprendizaje, métricas (Accuracy, Precision, Recall, F1).”
+“Historial de predicciones con exportación a CSV.”
+“Panel de analítica con tiempo de sesión, visitas por sección y estadísticas históricas.”
+“Dataset cargado directamente desde UCI (para EDA) y desde archivo local procesado (para modelo).”
 
 ### Funcionalidades
 
-- **Pantalla Principal**: Presentacion del proyecto y narrativa del caso de negocio.
-- **Analisis de Datos (EDA)**: Exploracion del dataset, visualizaciones y matriz de correlacion.
-- **Prediccion IA**: Modelo MLP (Perceptron Multicapa) con PyTorch para clasificar vinos.
-  - Metricas de rendimiento (Accuracy, Precision, Recall, F1-Score)
-  - Boton "Aleatorizar Muestra" para cargar datos reales del dataset
-  - Historial de predicciones guardado automaticamente
-- **Analitica Web**: Panel completo de metricas de uso.
-  - Reloj de sesion en tiempo real
-  - Tracking de navegacion por secciones
-  - Historial de vinos clasificados con grafico interactivo (Plotly)
+- **Pantalla Principal**: Presentación del proyecto y narrativa del caso de negocio.
+- **Análisis de Datos (EDA)**: Exploración del dataset, visualizaciones y matriz de correlación.
+- **Predicción IA**: Modelo MLP (Perceptrón Multicapa) con PyTorch para clasificar vinos.
+  - Métricas de rendimiento (Accuracy, Precision, Recall, F1-Score)
+  - Botón "Aleatorizar Muestra" para cargar datos reales del dataset
+  - Historial de predicciones guardado automáticamente
+- **Analítica Web**: Panel completo de métricas de uso.
+  - Reloj de sesión en tiempo real
+  - Tracking de navegación por secciones
+  - Historial de vinos clasificados con gráfico interactivo (Plotly)
   - Persistencia de sesiones en archivo JSON
-  - Exportacion de historial a CSV
+  - Exportación de historial a CSV
 
 ## Requisitos
 
 - Python 3.9 o superior
 - pip actualizado
 
-## Instalacion
+## Instalación
 
 1. Clonar el repositorio:
 
@@ -50,21 +64,21 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
-## Ejecucion
+## Ejecución
 
-Ejecutar la aplicacion Streamlit:
+Ejecutar la aplicación Streamlit:
 
 ```powershell
 streamlit run app.py
 ```
 
-La aplicacion se abrira automaticamente en el navegador en `http://localhost:8501`
+La aplicación se abrirá automáticamente en el navegador en `http://localhost:8501`
 
 ## Estructura del Proyecto
 
 ```
 Prueba-2-Herramientas/
-|-- app.py                 # Punto de entrada de la aplicacion
+|-- app.py                 # Punto de entrada de la aplicación
 |-- requirements.txt       # Dependencias del proyecto
 |-- README.md
 |-- ui/
@@ -72,7 +86,7 @@ Prueba-2-Herramientas/
 |   |-- pantalla_principal.py
 |   |-- analisis_datos.py
 |   |-- prediccion.py
-|   |-- analitica.py       # Modulo de analitica web
+|   |-- analitica.py       # Módulo de analítica web
 |-- data/
 |   |-- dataset.csv        # Dataset Wine Quality (UCI)
 |   |-- procesado.pkl      # Dataset preprocesado
@@ -85,20 +99,26 @@ Prueba-2-Herramientas/
     |-- instrucciones.md
 ```
 
+## Limitaciones y mejoras a futuro
+Bullets:
+“Actualmente solo se usa el dataset de vinos tintos (no blancos).”
+“El modelo está entrenado con un único split; no hay validación cruzada.”
+“Futuro: probar otros modelos (XGBoost, Random Forest), explicar mejor las predicciones (SHAP/LIME) y desplegar en la nube.”
+
 ## Equipo de Desarrollo
 
-- **Antonia Montecinos**: Estructura del proyecto y pantalla principal
-- **Cristian Vergara**: Modelo MLP y modulo de prediccion
-- **Ignacio Ramirez**: Analisis exploratorio de datos, visualizaciones y modulo de analitica web
+- **Antonia Montecinos**: Estructura del proyecto, pantalla principal, redacción y corrección de textos y afincación de detalles
+- **Cristian Vergara**: Modelo MLP y módulo de predicción
+- **Ignacio Ramirez**: Análisis exploratorio de datos, visualizaciones y módulo de analítica web
 
-## Tecnologias Utilizadas
+## Tecnologías Utilizadas
 
 - Streamlit (frontend)
-- Pandas (manipulacion de datos)
+- Pandas (manipulación de datos)
 - PyTorch (red neuronal MLP)
-- Scikit-learn (metricas de rendimiento)
+- Scikit-learn (métricas de rendimiento)
 - Matplotlib / Seaborn (visualizaciones EDA)
-- Plotly (graficos interactivos)
+- Plotly (gráficos interactivos)
 
 ## Fuente de Datos
 
@@ -107,5 +127,5 @@ Dataset Wine Quality Red del UCI Machine Learning Repository (carga desde fuente
 ## Asignatura
 
 INFB6052 - Herramientas para Ciencia de Datos
-Universidad Tecnica Metropolitana
+Universidad Técnica Metropolitana
 Segundo Semestre 2025

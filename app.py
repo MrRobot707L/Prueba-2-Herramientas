@@ -10,7 +10,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- Archivo para persistir datos de analitica ---
+# --- Archivo para persistir datos de analítica ---
 ANALYTICS_FILE = "data/analytics_history.json"
 
 def cargar_historial_sesiones():
@@ -29,10 +29,10 @@ def guardar_historial_sesiones(historial):
     with open(ANALYTICS_FILE, 'w', encoding='utf-8') as f:
         json.dump(historial, f, ensure_ascii=False, indent=2)
 
-# --- ANALITICA WEB: Tracking de sesiones y navegacion ---
+# --- ANALÍTICA WEB: Tracking de sesiones y navegación ---
 if 'session_start' not in st.session_state:
     st.session_state.session_start = datetime.now()
-    st.session_state.page_views = {'Inicio': 0, 'Análisis de Datos': 0, 'Predicción IA': 0, 'Analitica': 0}
+    st.session_state.page_views = {'Inicio': 0, 'Análisis de Datos': 0, 'Predicción IA': 0, 'Analítica Web': 0}
     st.session_state.total_views = 0
     st.session_state.historial_predicciones = []
     st.session_state.historial_sesiones = cargar_historial_sesiones()
@@ -41,16 +41,16 @@ if 'session_start' not in st.session_state:
 st.sidebar.title("Navegación")
 opcion = st.sidebar.radio(
     "Ir a:",
-    ["Inicio", "Análisis de Datos", "Predicción IA", "Analitica"]
+    ["Inicio", "Análisis de Datos", "Predicción IA", "Analítica Web"]
 )
 
 # Registrar visita a la pagina
 st.session_state.page_views[opcion] += 1
 st.session_state.total_views += 1
 
-# --- Guardar sesion automaticamente ---
+# --- Guardar sesión automáticamente ---
 def guardar_sesion_actual():
-    """Guarda la sesion actual automaticamente"""
+    """Guarda la sesión actual automáticamente"""
     tiempo_sesion = datetime.now() - st.session_state.session_start
     h = int(tiempo_sesion.total_seconds() // 3600)
     m = int((tiempo_sesion.total_seconds() % 3600) // 60)
@@ -92,12 +92,12 @@ elif opcion == "Análisis de Datos":
     analisis_datos.show()
 elif opcion == "Predicción IA":
     prediccion.show()
-elif opcion == "Analitica":
+elif opcion == "Analítica Web":
     analitica.show()
 
-# --- ANALITICA WEB: Panel de estadisticas en sidebar ---
+# --- ANALÍTICA WEB: Panel de estadísticas en sidebar ---
 st.sidebar.markdown("---")
-st.sidebar.markdown("### Analitica de Sesion")
+st.sidebar.markdown("### Analítica Web de la Sesión")
 
 # Reloj en tiempo real en sidebar usando fragment con context manager
 @st.fragment(run_every=1)
@@ -106,14 +106,14 @@ def reloj_sidebar():
     horas = int(tiempo_sesion.total_seconds() // 3600)
     minutos = int((tiempo_sesion.total_seconds() % 3600) // 60)
     segundos = int(tiempo_sesion.total_seconds() % 60)
-    st.metric("⏱️ Tiempo de sesion", f"{horas:02d}:{minutos:02d}:{segundos:02d}")
+    st.metric("⏱️ Tiempo de sesión", f"{horas:02d}:{minutos:02d}:{segundos:02d}")
 
 with st.sidebar:
     reloj_sidebar()
     st.metric("🔄 Total navegaciones", st.session_state.total_views)
 
 # Desglose por pagina
-st.sidebar.markdown("**Visitas por seccion:**")
+st.sidebar.markdown("**Visitas por sección:**")
 for pagina, visitas in st.session_state.page_views.items():
     st.sidebar.text(f"  {pagina}: {visitas}")
 
