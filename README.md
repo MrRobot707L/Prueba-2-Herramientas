@@ -1,6 +1,6 @@
 # Viña CIA - Sommelier Artificial (Streamlit + PyTorch)
 
-**Versión Avanzada (75%)**
+**Versión Final**
 
 Aplicación web en Streamlit para analizar y predecir la calidad de vinos tintos usando un modelo de red neuronal (MLP) y un módulo de analítica de uso en tiempo real.
 

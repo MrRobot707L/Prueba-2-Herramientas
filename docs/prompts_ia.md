@@ -268,3 +268,6 @@ quiero saber si hay alguna manera de graficar el entrenamiento a tiempoo real
             barra_progreso.progress((epoch + 1) / num_epochs)
                 
         return train_losses
+## prompt 8
+quiero mejorar el diseño de mi pantalla principall 
+Gemini agrego mejoras esteticas al pantalla_principal.py
